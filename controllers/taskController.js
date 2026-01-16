@@ -123,12 +123,12 @@ exports.updateTask = async (req, res) => {
       if (isNaN(dateObj.getTime())) {
         return res.status(400).json({ message: "Invalid completedAt date" });
       }
-      const now = new Date();
-      const oneMinuteFromNow = new Date(now.getTime() + 60 * 1000);
-      if (dateObj > oneMinuteFromNow) {
-        return res.status(400).json({ message: "Task completion cannot be in the future!" });
-      }
-      task.completedAt = dateObj;
+      // const now = new Date();
+      // const oneMinuteFromNow = new Date(now.getTime() + 60 * 1000);
+      // if (dateObj > oneMinuteFromNow) {
+      //   return res.status(400).json({ message: "Task completion cannot be in the future!" });
+      // }
+      task.completedAt = new Date(req.body.completedAt);
     }
 
     if (task.subtasks && task.subtasks.length > 0) {
