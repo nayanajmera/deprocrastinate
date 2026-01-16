@@ -125,7 +125,7 @@ exports.updateTask = async (req, res) => {
       }
       const now = new Date();
       // Create a 10-minute buffer into the future
-      const bufferTime = new Date(now.getTime() + 10 * 60 * 1000);
+      const bufferTime = new Date(now.getTime() + 10 * 60 * 1000).toISOString();
       if (dateObj > bufferTime) {
         return res.status(400).json({ message: "Task completion cannot be in the future!" });
       }
