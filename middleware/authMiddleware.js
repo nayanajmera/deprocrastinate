@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-const protect = async (req, res, next) => {
+exports.protect = async (req, res, next) => {
   let token;
 
   if (req.headers.authorization?.startsWith("Bearer")) {
@@ -19,4 +19,3 @@ const protect = async (req, res, next) => {
   if (!token) res.status(401).json({ message: "No token, login first"});
 };
 
-module.exports = protect;
