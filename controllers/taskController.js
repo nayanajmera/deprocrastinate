@@ -124,6 +124,7 @@ exports.updateTask = async (req, res) => {
         return res.status(400).json({ message: "Invalid completedAt date" });
       }
       const now = new Date();
+      console.log(dateObj, now.toISOString());
       // Create a 10-minute buffer into the future
       const bufferTime = new Date(now.getTime() + 10 * 60 * 1000).toISOString();
       if (dateObj > bufferTime) {
