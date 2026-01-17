@@ -124,9 +124,7 @@ exports.updateTask = async (req, res) => {
         return res.status(400).json({ message: "Invalid completedAt date" });
       }
       const now = new Date();
-      console.log(dateObj.toISOString(), now.toISOString());
-      console.log(dateObj.toISOString().getTime(), now.toISOString().getTime());
-      // Create a 10-minute buffer into the future
+      console.log(dateObj.getTime(), now.getTime());
       const bufferTime = new Date(now.getTime() + 10 * 60 * 1000).toISOString();
       if (dateObj > bufferTime) {
         return res.status(400).json({ message: "Task completion cannot be in the future!" });
