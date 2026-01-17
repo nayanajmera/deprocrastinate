@@ -13,7 +13,7 @@ connectDB().then(()=>console.log("Database connection established"));
 const app = express();
 
 const allowedOrigins = [
-  "https://deprocrastinate-app.vercel.app", 
+  "https://deprocrastinate.vercel.app", 
   "http://localhost:5173"
 ];
 app.use(cors({
