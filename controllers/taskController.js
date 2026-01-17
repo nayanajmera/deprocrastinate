@@ -125,8 +125,8 @@ exports.updateTask = async (req, res) => {
       }
       const now = new Date();
       console.log(dateObj.getTime(), now.getTime());
-      const bufferTime = new Date(now.getTime() + 10 * 60 * 1000).toISOString();
-      if (dateObj > bufferTime) {
+      // const bufferTime = new Date(now.getTime() + 10 * 60 * 1000);
+      if (dateObj.getTime() > now.getTime()+10*60*1000) {
         return res.status(400).json({ message: "Task completion cannot be in the future!" });
       }
       task.completedAt = dateObj;
