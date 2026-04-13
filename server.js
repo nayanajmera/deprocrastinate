@@ -34,7 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   const mongoose = require('mongoose');
   if (mongoose.connection.readyState === 0) {
-    return res.status(503).json({ message: "Database cluster is down or paused due to inactivity. Please try again later." });
+    return res.status(503).json({ message: "There was an internal server error. Please contact admin for it." });
   }
   next();
 });
