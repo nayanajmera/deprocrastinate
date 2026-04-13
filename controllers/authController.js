@@ -52,6 +52,9 @@ exports.registerUser = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
+    if (err.name === 'MongooseServerSelectionError' || err.message.includes('timeout')) {
+      return res.status(503).json({ message: "Database cluster is down or paused due to inactivity. Please try again later." });
+    }
     res.status(500).json({ message: "Something went wrong" });
   }
 };
@@ -82,6 +85,9 @@ exports.loginUser = async (req, res) => {
     }
   } catch (err) {
     console.error(err);
+    if (err.name === 'MongooseServerSelectionError' || err.message.includes('timeout')) {
+      return res.status(503).json({ message: "Database cluster is down or paused due to inactivity. Please try again later." });
+    }
     res.status(500).json({ message: "Something went wrong" });
   }
 };

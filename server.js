@@ -13,8 +13,7 @@ connectDB().then(()=>console.log("Database connection established"));
 const app = express();
 
 const allowedOrigins = [
-  "https://deprocrastinate.vercel.app", 
-  "http://localhost:5173"
+  "https://deprocrastinate.vercel.app"
 ];
 app.use(cors({
   origin: function (origin, callback) {
@@ -32,6 +31,14 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  const mongoose = require('mongoose');
+  if (mongoose.connection.readyState === 0) {
+    return res.status(503).json({ message: "Database cluster is down or paused due to inactivity. Please try again later." });
+  }
+  next();
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use('/api/ai', aiRoutes);
