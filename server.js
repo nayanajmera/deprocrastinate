@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const cors = require("cors");
 const connectDB = require("./config/db");
-
+const mongoose = require('mongoose');
 const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const aiRoutes = require("./routes/ai");
@@ -32,7 +32,6 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
-  const mongoose = require('mongoose');
   if (mongoose.connection.readyState === 0) {
     return res.status(503).json({ message: "There was an internal server error. Please contact admin for it." });
   }
