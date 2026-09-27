@@ -43,5 +43,15 @@ app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use('/api/ai', aiRoutes);
 
+app.get('/api/db-ping', async (req, res) => {
+    try {
+        // Sends a lightweight ping directly to the MongoDB server
+        await mongoose.connection.db.admin().ping();
+        res.status(200).send('Database pinged successfully');
+    } catch (error) {
+        res.status(500).send('Database ping failed');
+    }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
