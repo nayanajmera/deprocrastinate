@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
 const cors = require("cors");
+const { rateLimit } = require("express-rate-limit");
 const connectDB = require("./config/db");
 const mongoose = require('mongoose');
 const authRoutes = require("./routes/authRoutes");
@@ -27,6 +28,11 @@ app.use(cors({
   },
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   credentials: true
+}));
+
+app.use(rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 500
 }));
 
 app.use(express.json());
