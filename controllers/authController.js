@@ -95,7 +95,7 @@ exports.loginUser = async (req, res) => {
 //3. Get Current User Profile with Weekly Activity
 exports.getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(req.user.id).select('-password').lean();
     if (!user) return res.status(404).json({ message: "User not found" });
 
     // calculate the last 7 days range
@@ -109,7 +109,7 @@ exports.getMe = async (req, res) => {
       user: req.user.id,
       status: 'completed',
       completedAt: { $gte: sevenDaysAgo }
-    });
+    }).select({ completedAt: 1, _id: 0 }).lean();
 
     // group them into an array [Day1, Day2, ... Today]
     const activityMap = [0, 0, 0, 0, 0, 0, 0];
@@ -128,7 +128,7 @@ exports.getMe = async (req, res) => {
 
     //sending response to frontend
     res.json({
-      _id: user.id,
+      _id: user._id,
       name: user.name,
       email: user.email,
       xp: user.xp,

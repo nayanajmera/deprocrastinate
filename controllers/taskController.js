@@ -16,7 +16,7 @@ const calculateXP = (task) => {
 // 1. get tasks
 exports.getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({ user: req.user.id }).sort({ date: -1 });
+    const tasks = await Task.find({ user: req.user.id }).sort({ date: -1 }).lean();
     res.json(tasks);
   } catch (err) {
     console.error(err);
@@ -253,7 +253,7 @@ exports.getStats = async (req, res) => {
   try {
     const userId = req.user.id;
   
-    const user = await User.findById(userId).select('streak');
+    const user = await User.findById(userId).select('streak').lean();
 
     const totalTasks = await Task.countDocuments({ user: userId });
     const completedTasks = await Task.countDocuments({ user: userId, status: 'completed' });

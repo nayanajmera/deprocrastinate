@@ -18,4 +18,7 @@ const TaskSchema = new mongoose.Schema({
   awardedXP: { type: Number, default: 0 } 
 }, {timestamps: true});
 
+TaskSchema.index({ user: 1, date: -1 });
+TaskSchema.index({ user: 1, status: 1, completedAt: 1 });
+
 module.exports = mongoose.model('Task', TaskSchema);
