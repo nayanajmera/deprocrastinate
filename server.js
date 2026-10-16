@@ -32,7 +32,9 @@ app.use(cors({
 
 app.use(rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 500
+  limit: 500,
+  skip: (req) => Boolean(process.env.K6_BYPASS_SECRET) &&
+    req.get("x-k6-test-bypass") === process.env.K6_BYPASS_SECRET
 }));
 
 app.use(express.json());
