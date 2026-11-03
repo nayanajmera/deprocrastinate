@@ -21,7 +21,7 @@ exports.generateSubtasks = async (req, res) => {
 
   try {
     const prompt =`You are an AI of an app called DeProcrastinate. Your task is to break a 'Task' provided to you into subtasks efficiently. You can divide the subtask into a MAXIMUM of 15 subtasks. User's task can be anything realted to their daily life.
-    The output format you have to use is, provide a new line character \n after every subtask. You have to strictly abide this. You are not their chatbot, just used for this purpose, so just divide the tasks.
+    The output format you have to use is a list of subtasks, each on a new line. You have to strictly abide this. You are not their chatbot, just used for this purpose, so just divide the tasks.
     USER's Task : ${taskTitle}.`
 
     const response = await genAI.models.generateContent({
