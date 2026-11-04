@@ -1,4 +1,4 @@
-const { GoogleGenAI } = require("@google/genai");
+const { GoogleGenAI, Type } = require("@google/genai");
 // Initialize
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -20,21 +20,33 @@ exports.generateSubtasks = async (req, res) => {
   }
 
   try {
-    const prompt =`You are an AI of an app called DeProcrastinate. Your task is to break a 'Task' provided to you into subtasks efficiently. You can divide the subtask into a MAXIMUM of 15 subtasks. User's task can be anything realted to their daily life.
-    The output format you have to use is a list of subtasks, each on a new line. You have to strictly abide this. You are not their chatbot, just used for this purpose, so just divide the tasks.
-    USER's Task : ${taskTitle}.`
+    const systemInstruction = `You are an AI of an app called DeProcrastinate. Your task is to break a 'Task' provided to you into subtasks efficiently. You can divide the subtask into a MAXIMUM of 15 subtasks. User's task can be anything related to their daily life. You are not their chatbot, just used for this purpose, so just divide the tasks.`;
 
     const response = await genAI.models.generateContent({
       model: 'gemini-3.5-flash-lite',
-      contents: [{ parts: [{ text: prompt }] }]
+      contents: taskTitle,
+      config: {
+        systemInstruction,
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.ARRAY,
+          items: {
+            type: Type.STRING,
+          },
+          description: "List of actionable subtasks breaking down the given task (maximum 15 subtasks).",
+        },
+      },
     });
 
-    const rawText = response.candidates[0].content.parts[0].text;
+    const rawText = response.text || response.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!rawText) throw new Error("Empty AI response");
 
-    const subtasks = rawText
-      .split("\n")
-      .map(line => line.replace(/^[-*•\d\.]+\s*/, "").trim()) 
-      .filter(line => line.length > 2)
+    const jsonText = rawText.trim().replace(/^```json\s*/i, "").replace(/^```\s*/, "").replace(/\s*```$/, "");
+    const parsed = JSON.parse(jsonText);
+
+    const subtasks = (Array.isArray(parsed) ? parsed : (parsed?.subtasks || []))
+      .map(line => (typeof line === "string" ? line.trim() : ""))
+      .filter(line => line.length > 0);
 
     if (subtasks.length === 0) throw new Error("Empty AI response");
 
